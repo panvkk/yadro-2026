@@ -1,5 +1,6 @@
 package com.example.contactsapp.ui.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import com.example.contactsapp.ui.viewmodel.ContactsViewModel
 @Composable
 fun ContactsScreen(
     viewModel: ContactsViewModel,
+    makeCall: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
@@ -35,6 +37,7 @@ fun ContactsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = dimensionResource(R.dimen.small_padding))
+                            .clickable { makeCall(contact.phoneNumber) }
                     )
                 }
             }

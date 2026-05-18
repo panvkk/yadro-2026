@@ -24,11 +24,18 @@ class ContactsDataSource @Inject constructor(
 
         val contactsMap = HashMap<Long, ContactDto>()
 
+        val selection = "(${ContactsContract.RawContacts.ACCOUNT_NAME} IS NULL AND ${ContactsContract.RawContacts.ACCOUNT_TYPE} IS NULL)" +
+                " OR ${ContactsContract.RawContacts.ACCOUNT_TYPE} IN (?, ?)"
+
+        val selectionArgs = arrayOf(
+            "com.android.localcontacts",
+            "vnd.sec.contact.phone"
+        )
         context.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             projection,
-            null,
-            null,
+            selection,
+            selectionArgs,
             null
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)

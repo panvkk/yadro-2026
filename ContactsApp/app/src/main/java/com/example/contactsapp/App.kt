@@ -13,7 +13,8 @@ import com.example.contactsapp.ui.viewmodel.ContactsViewModel
 
 @Composable
 fun ContactsApp(
-    contactsViewModel: ContactsViewModel
+    contactsViewModel: ContactsViewModel,
+    makeCall: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -22,6 +23,7 @@ fun ContactsApp(
     ) { innerPadding ->
         ContactsScreen(
             viewModel = contactsViewModel,
+            makeCall = makeCall,
             modifier = Modifier.padding(innerPadding)
                 .padding(horizontal = 16.dp)
         )
