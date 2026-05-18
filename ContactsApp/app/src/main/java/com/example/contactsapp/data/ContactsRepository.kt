@@ -12,12 +12,16 @@ class ContactsRepository @Inject constructor(
     private val contactsDataSource: ContactsDataSource
 ) {
     fun getContacts(): Flow<List<ContactUiModel>> =
-        contactsDataSource.getContacts().map { contactsDto -> contactsDto.map { it.toUiModel() } }
+        contactsDataSource.getContacts().map { contactsDto ->
+            contactsDto
+                .sortedBy { it.contactDisplayName }
+                .map { it.toUiModel() }
+        }
 }
 
 fun ContactDto.toUiModel() = ContactUiModel(
-    contactId.toLong(),
+    contactId,
     contactDisplayName,
-    mainPhoneNumber,
+    phoneNumber,
     contactAvatarUri?.toUri()
 )

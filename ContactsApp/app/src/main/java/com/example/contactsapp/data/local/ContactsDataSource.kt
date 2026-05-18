@@ -16,38 +16,55 @@ class ContactsDataSource @Inject constructor(
 ) {
 
     fun getContacts() : Flow<List<ContactDto>> = flow {
-        val contactsList = mutableListOf<ContactDto>()
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY,
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
+            ContactsContract.CommonDataKinds.Phone.TYPE,
             ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI
         )
+
+        val contactsMap = HashMap<Long, ContactDto>()
 
         context.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
             projection,
             null,
             null,
-            "${ContactsContract.Contacts.DISPLAY_NAME} ASC"
+            null
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
-            val nameIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY)
+            val nameIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
             val phoneIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
             val photoIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI)
+            val numberTypeIndex = cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)
 
             while (cursor.moveToNext()) {
-                contactsList.add(
-                    ContactDto(
-                        contactId = cursor.getString(idIndex),
+                val id = cursor.getLong(idIndex)
+                val phoneNumber = cursor.getString(phoneIndex)
+                val normalizedPhoneNumber = android.telephony.PhoneNumberUtils.normalizeNumber(phoneNumber)
+
+                val currentIsMobile = cursor.getInt(numberTypeIndex) == 1
+
+                if(contactsMap.contains(id)) {
+                    val existingContact = contactsMap[id]!!
+                    if(!existingContact.isMobile && currentIsMobile) {
+                        contactsMap[id] = existingContact.copy(
+                            phoneNumber = normalizedPhoneNumber,
+                            isMobile = true
+                        )
+                    }
+                } else {
+                    contactsMap[id] = ContactDto(
+                        contactId = id,
                         contactDisplayName = cursor.getString(nameIndex),
-                        mainPhoneNumber = cursor.getString(phoneIndex),
+                        phoneNumber = normalizedPhoneNumber,
+                        isMobile = currentIsMobile,
                         contactAvatarUri = cursor.getString(photoIndex)
                     )
-                )
-
+                }
             }
         }
-        emit(contactsList)
+        emit(contactsMap.values.toList())
     }.flowOn(dispatchers.io)
 }

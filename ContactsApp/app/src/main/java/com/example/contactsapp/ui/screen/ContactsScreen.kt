@@ -29,7 +29,7 @@ fun ContactsScreen(
     ) {
         when(state) {
             is ContactsUiState.Content -> {
-                items(state.data) { contact ->
+                items(state.data, { it.id }) { contact ->
                     ContactCard(
                         contact = contact,
                         modifier = Modifier

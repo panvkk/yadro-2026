@@ -26,7 +26,7 @@ fun ContactCard(
 ) {
     Card(
         modifier = modifier.height(dimensionResource(R.dimen.contact_card_height)),
-        shape = MaterialTheme.shapes.medium,
+        shape = MaterialTheme.shapes.large,
         elevation = CardDefaults.elevatedCardElevation(),
     ) {
         Row(
