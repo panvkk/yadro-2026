@@ -59,7 +59,6 @@ fun ContactCard(
                         .clip(MaterialTheme.shapes.medium)
                 )
             }
-
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.Start,
