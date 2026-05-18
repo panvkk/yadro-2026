@@ -5,9 +5,7 @@ import android.provider.ContactsContract
 import com.example.contactsapp.core.AppDispatchers
 import com.example.contactsapp.data.dto.ContactDto
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ContactsDataSource @Inject constructor(
@@ -15,7 +13,7 @@ class ContactsDataSource @Inject constructor(
     private val dispatchers: AppDispatchers
 ) {
 
-    fun getContacts() : Flow<List<ContactDto>> = flow {
+    suspend fun getContacts() : List<ContactDto> = withContext(dispatchers.io) {
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -65,6 +63,6 @@ class ContactsDataSource @Inject constructor(
                 }
             }
         }
-        emit(contactsMap.values.toList())
-    }.flowOn(dispatchers.io)
+        contactsMap.values.toList()
+    }
 }

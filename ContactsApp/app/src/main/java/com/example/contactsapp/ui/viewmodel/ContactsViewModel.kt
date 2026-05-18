@@ -20,9 +20,8 @@ class ContactsViewModel @Inject constructor(
 
     fun loadContacts() {
         viewModelScope.launch {
-            repository.getContacts().collect { contacts ->
-                _uiState.update { ContactsUiState.Content(contacts) }
-            }
+            val contacts = repository.getContacts()
+            _uiState.update { ContactsUiState.Content(contacts) }
         }
     }
 }

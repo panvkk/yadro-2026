@@ -11,12 +11,10 @@ import javax.inject.Inject
 class ContactsRepository @Inject constructor(
     private val contactsDataSource: ContactsDataSource
 ) {
-    fun getContacts(): Flow<List<ContactUiModel>> =
-        contactsDataSource.getContacts().map { contactsDto ->
-            contactsDto
-                .sortedBy { it.contactDisplayName }
-                .map { it.toUiModel() }
-        }
+    suspend fun getContacts(): List<ContactUiModel> =
+        contactsDataSource.getContacts()
+            .sortedBy { it.contactDisplayName }
+            .map { it.toUiModel() }
 }
 
 fun ContactDto.toUiModel() = ContactUiModel(
