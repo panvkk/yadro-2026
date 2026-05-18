@@ -20,6 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val contactsViewModel: ContactsViewModel by viewModels()
 
+    private var currentPhoneNumber: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,22 +29,13 @@ class MainActivity : ComponentActivity() {
             ContactsAppTheme {
                 ContactsApp(
                     contactsViewModel = contactsViewModel,
-                    makeCall = { phoneNumber -> makeCall(this, phoneNumber) })
+                    makeCall = { phoneNumber ->
+                        checkPermissionAndCall(this, phoneNumber)
+                    })
             }
         }
-        checkCallPhonePermission()
         checkReadContactsPermission()
     }
-
-    private val requestReadContactsPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if(isGranted) contactsViewModel.loadContacts()
-    }
-    private val requestCallPhonePermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {  }
-
     private fun checkReadContactsPermission() {
         val permission = Manifest.permission.READ_CONTACTS
         if(ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
@@ -51,24 +44,38 @@ class MainActivity : ComponentActivity() {
             requestReadContactsPermissionLauncher.launch(permission)
         }
     }
-
+    private fun checkPermissionAndCall(context: Context, phoneNumber: String) {
+        currentPhoneNumber = phoneNumber
+        val permission = Manifest.permission.CALL_PHONE
+        if(ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+            makeCall(context, currentPhoneNumber!!)
+            currentPhoneNumber = null
+        } else {
+            requestCallPhonePermissionLauncher.launch(permission)
+        }
+    }
     private fun makeCall(context: Context, phoneNumber: String) {
         val intent = Intent(Intent.ACTION_CALL).apply {
             data = "tel:$phoneNumber".toUri()
         }
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CALL_PHONE
-            ) == PackageManager.PERMISSION_GRANTED
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
+            == PackageManager.PERMISSION_GRANTED
         ) {
-            context.startActivity(intent)
+            startActivity(intent)
         }
     }
-
-    private fun checkCallPhonePermission() {
-        val permission = Manifest.permission.CALL_PHONE
-        if(ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            requestCallPhonePermissionLauncher.launch(permission)
+    private val requestReadContactsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if(isGranted) contactsViewModel.loadContacts()
+    }
+    private val requestCallPhonePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        val phoneNumber = currentPhoneNumber
+        if(isGranted) {
+            phoneNumber?.let { makeCall(this, it) }
         }
+        currentPhoneNumber = null
     }
 }
