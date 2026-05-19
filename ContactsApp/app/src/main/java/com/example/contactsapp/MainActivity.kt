@@ -12,8 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.example.contactsapp.ui.theme.ContactsAppTheme
-import com.example.contactsapp.ui.viewmodel.ContactsViewModel
+import com.example.contactsapp.presentation.ui.theme.ContactsAppTheme
+import com.example.contactsapp.presentation.viewmodel.ContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,14 +68,16 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if(isGranted) contactsViewModel.loadContacts()
+        else { contactsViewModel.onPermissionDenied() }
     }
     private val requestCallPhonePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         val phoneNumber = currentPhoneNumber
-        if(isGranted) {
-            phoneNumber?.let { makeCall(this, it) }
-        }
+
+        if(isGranted) phoneNumber?.let { makeCall(this, it) }
+        else contactsViewModel.showCallsAlertDialog()
+
         currentPhoneNumber = null
     }
 }

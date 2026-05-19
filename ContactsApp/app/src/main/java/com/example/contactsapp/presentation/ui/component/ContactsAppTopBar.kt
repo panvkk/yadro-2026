@@ -1,4 +1,4 @@
-package com.example.contactsapp.ui.component
+package com.example.contactsapp.presentation.ui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api

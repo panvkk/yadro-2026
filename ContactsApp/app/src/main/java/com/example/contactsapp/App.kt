@@ -5,10 +5,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.contactsapp.ui.component.ContactsAppTopBar
-import com.example.contactsapp.ui.screen.ContactsScreen
-import com.example.contactsapp.ui.viewmodel.ContactsViewModel
+import com.example.contactsapp.presentation.ui.component.ContactsAppTopBar
+import com.example.contactsapp.presentation.ui.screen.ContactsScreen
+import com.example.contactsapp.presentation.viewmodel.ContactsViewModel
 
 
 @Composable
