@@ -1,9 +1,10 @@
-package com.example.contactsapp.ui.viewmodel
+package com.example.contactsapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.contactsapp.data.ContactsRepository
-import com.example.contactsapp.ui.model.ContactsUiState
+import com.example.contactsapp.domain.usecase.GetContactsUseCase
+import com.example.contactsapp.presentation.mapper.toUiModel
+import com.example.contactsapp.presentation.model.ContactsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,14 +14,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ContactsViewModel @Inject constructor(
-    private val repository: ContactsRepository
+    private val getContactsUseCase: GetContactsUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ContactsUiState>(ContactsUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
     fun loadContacts() {
         viewModelScope.launch {
-            val contacts = repository.getContacts()
+            val contacts = getContactsUseCase.invoke().map { it.toUiModel() }
             _uiState.update { ContactsUiState.Content(contacts) }
         }
     }

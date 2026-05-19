@@ -12,8 +12,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.example.contactsapp.ui.theme.ContactsAppTheme
-import com.example.contactsapp.ui.viewmodel.ContactsViewModel
+import com.example.contactsapp.presentation.ui.theme.ContactsAppTheme
+import com.example.contactsapp.presentation.viewmodel.ContactsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

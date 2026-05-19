@@ -1,4 +1,4 @@
-package com.example.contactsapp.ui.screen
+package com.example.contactsapp.presentation.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.contactsapp.R
-import com.example.contactsapp.ui.component.ContactCard
-import com.example.contactsapp.ui.model.ContactsUiState
-import com.example.contactsapp.ui.viewmodel.ContactsViewModel
+import com.example.contactsapp.presentation.ui.component.ContactCard
+import com.example.contactsapp.presentation.model.ContactsUiState
+import com.example.contactsapp.presentation.viewmodel.ContactsViewModel
 
 @Composable
 fun ContactsScreen(

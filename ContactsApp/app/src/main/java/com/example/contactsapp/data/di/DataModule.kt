@@ -1,4 +1,4 @@
-package com.example.contactsapp.di
+package com.example.contactsapp.data.di
 
 import com.example.contactsapp.core.AppDispatchers
 import dagger.Module

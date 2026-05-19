@@ -1,4 +1,4 @@
-package com.example.contactsapp.ui.component
+package com.example.contactsapp.presentation.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
 import com.example.contactsapp.R
-import com.example.contactsapp.ui.model.ContactUiModel
+import com.example.contactsapp.presentation.model.ContactUiModel
 
 @Composable
 fun ContactCard(

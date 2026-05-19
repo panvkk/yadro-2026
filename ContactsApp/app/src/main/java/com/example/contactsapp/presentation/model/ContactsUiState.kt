@@ -1,4 +1,4 @@
-package com.example.contactsapp.ui.model
+package com.example.contactsapp.presentation.model
 
 sealed interface ContactsUiState {
     data class Content(val data: List<ContactUiModel>) : ContactsUiState
