@@ -2,6 +2,7 @@ package com.example.contactsapp.data.local
 
 import android.content.Context
 import android.provider.ContactsContract
+import android.telephony.PhoneNumberUtils
 import com.example.contactsapp.core.AppDispatchers
 import com.example.contactsapp.data.dto.ContactDto
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -49,7 +50,7 @@ class ContactsDataSource @Inject constructor(
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idIndex)
                 val phoneNumber = cursor.getString(phoneIndex)
-                val normalizedPhoneNumber = android.telephony.PhoneNumberUtils.normalizeNumber(phoneNumber)
+                val normalizedPhoneNumber = PhoneNumberUtils.normalizeNumber(phoneNumber)
 
                 val currentIsMobile = cursor.getInt(numberTypeIndex) == 1
 
