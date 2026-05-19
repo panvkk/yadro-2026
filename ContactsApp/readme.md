@@ -1,4 +1,8 @@
 # ContactsApp
+Я постарался выполнить задание с как можно лучшей структурой, возможностью для масштабирования.
+Ссылка на скачивание релизного APK: https://github.com/panvkk/yadro-2026/raw/refs/heads/main/ContactsApp/app/release-apk/app-release.apk
+
+---
 
 ## Функциональные требования
 
