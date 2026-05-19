@@ -68,14 +68,16 @@ class MainActivity : ComponentActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if(isGranted) contactsViewModel.loadContacts()
+        else { contactsViewModel.onPermissionDenied() }
     }
     private val requestCallPhonePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         val phoneNumber = currentPhoneNumber
-        if(isGranted) {
-            phoneNumber?.let { makeCall(this, it) }
-        }
+
+        if(isGranted) phoneNumber?.let { makeCall(this, it) }
+        else contactsViewModel.showCallsAlertDialog()
+
         currentPhoneNumber = null
     }
 }

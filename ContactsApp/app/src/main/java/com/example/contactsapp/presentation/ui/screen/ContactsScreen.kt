@@ -10,12 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.contactsapp.R
 import com.example.contactsapp.presentation.ui.component.ContactCard
 import com.example.contactsapp.presentation.model.ContactsUiState
 import com.example.contactsapp.presentation.model.ItemType
 import com.example.contactsapp.presentation.ui.component.LetterHeader
+import com.example.contactsapp.presentation.ui.component.NoPermissionToContactsPlaceholder
+import com.example.contactsapp.presentation.ui.component.PermissionDeniedAlertDialog
 import com.example.contactsapp.presentation.viewmodel.ContactsViewModel
 
 @Composable
@@ -25,6 +28,7 @@ fun ContactsScreen(
     modifier: Modifier = Modifier
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
+    val alertDialogsState = viewModel.alertDialogsState.collectAsStateWithLifecycle().value
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -58,7 +62,21 @@ fun ContactsScreen(
 
                 }
             }
+            is ContactsUiState.PermissionDenied -> {
+                item { NoPermissionToContactsPlaceholder() }
+            }
             else -> {  }
         }
+    }
+    if(alertDialogsState.showContactsAlertDialog) {
+        PermissionDeniedAlertDialog(
+            onDismiss = { viewModel.closeContactsAlertDialog() },
+            text = stringResource(R.string.read_contacts_permission_denied_alert_dialog_text)
+        )
+    } else if(alertDialogsState.showCallsAlertDialog) {
+        PermissionDeniedAlertDialog(
+            onDismiss = { viewModel.closeCallsAlertDialog() },
+            text = stringResource(R.string.call_phone_permission_denied_alert_dialog_text)
+        )
     }
 }

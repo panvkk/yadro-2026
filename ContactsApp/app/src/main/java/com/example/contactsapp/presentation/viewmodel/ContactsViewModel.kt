@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.contactsapp.domain.usecase.GetContactsUseCase
 import com.example.contactsapp.presentation.mapper.toUiModel
+import com.example.contactsapp.presentation.model.AlertDialogsModel
 import com.example.contactsapp.presentation.model.ContactUiModel
 import com.example.contactsapp.presentation.model.ContactsUiState
 import com.example.contactsapp.presentation.model.ItemType
@@ -20,6 +21,12 @@ class ContactsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ContactsUiState>(ContactsUiState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _alertDialogsState = MutableStateFlow(AlertDialogsModel(
+        showContactsAlertDialog = false,
+        showCallsAlertDialog = false
+    ))
+    val alertDialogsState = _alertDialogsState.asStateFlow()
 
     fun loadContacts() {
         viewModelScope.launch {
@@ -44,5 +51,22 @@ class ContactsViewModel @Inject constructor(
             itemTypes.add(ItemType.ContactCard(it))
         }
         return itemTypes.toList()
+    }
+
+    fun onPermissionDenied() {
+        _uiState.update { ContactsUiState.PermissionDenied }
+    }
+
+    fun showContactsAlertDialog() {
+        _alertDialogsState.update { it.copy(showContactsAlertDialog = true) }
+    }
+    fun showCallsAlertDialog() {
+        _alertDialogsState.update { it.copy(showCallsAlertDialog = true) }
+    }
+    fun closeContactsAlertDialog() {
+        _alertDialogsState.update { it.copy(showContactsAlertDialog = false) }
+    }
+    fun closeCallsAlertDialog() {
+        _alertDialogsState.update { it.copy(showCallsAlertDialog = false) }
     }
 }
