@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ContactsApp</string>
+    <string name="contacts_top_bar_title">Контакты</string>
+    <string name="contact_avatar_description">Аватар контакта</string>
+    <string name="no_avatar_description">Нет аватара</string>
+    <string name="confirm_text_button">Понятно</string>
+    <string name="default_alert_dialog_title">Внимание</string>
+    <string name="call_phone_permission_denied_alert_dialog_text">Для совершения звонков требуется соответствующее разрешение. Перейдите в настройки и дайте разрешение вручную.</string>
+    <string name="read_contacts_permission_denied_alert_dialog_text">Для доступа к контактам требуется соответствующее разрешение. Перейдите в настройки и дайте разрешение вручную.</string>
+    <string name="error_loading_contacts">Не удалось загрузить контакты.</string>
+    <string name="contacts_loading">Загрузка контактов...</string>
+    <string name="contacts_list_empty">Список контактов пуст.</string>
+</resources>

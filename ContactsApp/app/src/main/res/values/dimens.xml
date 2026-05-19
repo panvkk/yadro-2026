@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!-- Размеры -->
+    <dimen name="contact_card_height">86dp</dimen>
+    <dimen name="contact_avatar_size">48dp</dimen>
+    <dimen name="divider_thickness">0.5dp</dimen>
+<!-- Отступы -->
+    <dimen name="extra_small_padding">4dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
+    <dimen name="medium_padding">12dp</dimen>
+    <dimen name="large_padding">16dp</dimen>
+</resources>
