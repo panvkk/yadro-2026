@@ -1,4 +1,5 @@
 .idea/
+release/
 .kotlin/
 *.iml
 .DS_Store
