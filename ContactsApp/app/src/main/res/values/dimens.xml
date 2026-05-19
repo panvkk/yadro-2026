@@ -3,6 +3,7 @@
 <!-- Размеры -->
     <dimen name="contact_card_height">86dp</dimen>
     <dimen name="contact_avatar_size">48dp</dimen>
+    <dimen name="divider_thickness">0.5dp</dimen>
 <!-- Отступы -->
     <dimen name="extra_small_padding">4dp</dimen>
     <dimen name="small_padding">8dp</dimen>

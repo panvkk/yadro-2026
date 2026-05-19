@@ -14,6 +14,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.contactsapp.R
 import com.example.contactsapp.presentation.ui.component.ContactCard
 import com.example.contactsapp.presentation.model.ContactsUiState
+import com.example.contactsapp.presentation.model.ItemType
+import com.example.contactsapp.presentation.ui.component.LetterHeader
 import com.example.contactsapp.presentation.viewmodel.ContactsViewModel
 
 @Composable
@@ -31,14 +33,29 @@ fun ContactsScreen(
     ) {
         when(state) {
             is ContactsUiState.Content -> {
-                items(state.data, { it.id }) { contact ->
-                    ContactCard(
-                        contact = contact,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = dimensionResource(R.dimen.small_padding))
-                            .clickable { makeCall(contact.phoneNumber) }
-                    )
+                items(
+                    state.data,
+                    contentType = { item ->
+                        when(item) {
+                            is ItemType.LetterHeader -> "LETTER_HEADER_TYPE"
+                            is ItemType.ContactCard -> "CONTACT_TYPE"
+                        }
+                    }
+                ) { item ->
+                    when(item) {
+                        is ItemType.ContactCard -> {
+                            ContactCard(
+                                contact = item.contact,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = dimensionResource(R.dimen.small_padding))
+                                    .clickable { makeCall(item.contact.phoneNumber) }
+                            )
+                        }
+                        is ItemType.LetterHeader ->
+                            LetterHeader(item.letter, Modifier.padding(vertical = dimensionResource(R.dimen.large_padding)))
+                    }
+
                 }
             }
             else -> {  }
