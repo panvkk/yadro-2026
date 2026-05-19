@@ -31,9 +31,5 @@ fun LetterHeader(
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(start = dimensionResource(R.dimen.large_padding))
         )
-        HorizontalDivider(
-            thickness = dimensionResource(R.dimen.divider_thickness),
-            color = MaterialTheme.colorScheme.outlineVariant
-        )
     }
 }

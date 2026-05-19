@@ -3,6 +3,7 @@ package com.example.contactsapp.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.contactsapp.core.AppDispatchers
 import com.example.contactsapp.domain.usecase.GetContactsUseCase
 import com.example.contactsapp.presentation.mapper.toUiModel
 import com.example.contactsapp.presentation.model.AlertDialogsModel
@@ -14,11 +15,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class ContactsViewModel @Inject constructor(
-    private val getContactsUseCase: GetContactsUseCase
+    private val getContactsUseCase: GetContactsUseCase,
+    private val dispatchers: AppDispatchers
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ContactsUiState>(ContactsUiState.Loading)
     val uiState = _uiState.asStateFlow()
@@ -33,7 +36,9 @@ class ContactsViewModel @Inject constructor(
         viewModelScope.launch {
             getContactsUseCase.invoke()
                 .onSuccess { contacts ->
-                    val itemTypes = getItemTypes(contacts.map { it.toUiModel() })
+                    val itemTypes = withContext(dispatchers.default) { // потому то сложный маппинг
+                        getItemTypes(contacts.map { it.toUiModel() })
+                    }
                     _uiState.update { ContactsUiState.Content(itemTypes) }
                 }
                 .onFailure {
@@ -44,12 +49,22 @@ class ContactsViewModel @Inject constructor(
     }
 
     private fun getItemTypes(contacts: List<ContactUiModel>) : List<ItemType> {
+        if(contacts.isEmpty()) return emptyList()
+
+        val getFirstLetter = { contact: ContactUiModel ->
+            if(contact.fullName.isEmpty())
+                contact.phoneNumber.first()
+            else
+                contact.fullName.first().uppercaseChar()
+        }
+
         val itemTypes = mutableListOf<ItemType>()
-        var previousLetter = contacts.first().fullName.first().uppercaseChar()
+        var previousLetter = getFirstLetter(contacts.first())
         itemTypes.add(ItemType.LetterHeader(previousLetter))
 
         contacts.forEach {
-            val currentLetter = it.fullName.first().uppercaseChar()
+            val currentLetter = getFirstLetter(it)
+
             if(previousLetter != currentLetter) {
                 itemTypes.add(ItemType.LetterHeader(currentLetter))
                 previousLetter = currentLetter
@@ -78,6 +93,6 @@ class ContactsViewModel @Inject constructor(
     }
 
     companion object {
-        const val TAG = "ContactsViewModel"
+        private const val TAG = "ContactsViewModel"
     }
 }

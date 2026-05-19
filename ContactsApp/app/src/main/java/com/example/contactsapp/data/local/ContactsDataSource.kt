@@ -12,7 +12,6 @@ class ContactsDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dispatchers: AppDispatchers
 ) {
-
     suspend fun getContacts() : List<ContactDto> = withContext(dispatchers.io) {
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
@@ -25,11 +24,14 @@ class ContactsDataSource @Inject constructor(
         val contactsMap = HashMap<Long, ContactDto>()
 
         val selection = "(${ContactsContract.RawContacts.ACCOUNT_NAME} IS NULL AND ${ContactsContract.RawContacts.ACCOUNT_TYPE} IS NULL)" +
-                " OR ${ContactsContract.RawContacts.ACCOUNT_TYPE} IN (?, ?)"
+                " OR ${ContactsContract.RawContacts.ACCOUNT_TYPE} IN (?, ?, ?, ?, ?)"
 
         val selectionArgs = arrayOf(
-            "com.android.localcontacts",
-            "vnd.sec.contact.phone"
+            BASED_ACCOUNT_TYPE,
+            SAMSUNG_ACCOUNT_TYPE,
+            HUAWEI_ACCOUNT_TYPE,
+            XIAOMI_ACCOUNT_TYPE,
+            SONY_ACCOUNT_TYPE
         )
         context.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -71,5 +73,13 @@ class ContactsDataSource @Inject constructor(
             }
         }
         contactsMap.values.toList()
+    }
+
+    companion object {
+        private const val SAMSUNG_ACCOUNT_TYPE = "vnd.sec.contact.phone"
+        private const val BASED_ACCOUNT_TYPE = "com.android.localcontacts"
+        private const val HUAWEI_ACCOUNT_TYPE = "com.android.huawei.phone"
+        private const val XIAOMI_ACCOUNT_TYPE = "com.android.contacts.default"
+        private const val SONY_ACCOUNT_TYPE = "com.sonyericsson.localcontacts"
     }
 }

@@ -61,7 +61,14 @@ fun ContactsScreen(
                         is ItemType.LetterHeader ->
                             LetterHeader(item.letter, Modifier.padding(vertical = dimensionResource(R.dimen.large_padding)))
                     }
-
+                }
+                if(state.data.isEmpty()) {
+                    item {
+                        Text(
+                            text = stringResource(R.string.contacts_list_empty),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 }
             }
             is ContactsUiState.PermissionDenied -> {

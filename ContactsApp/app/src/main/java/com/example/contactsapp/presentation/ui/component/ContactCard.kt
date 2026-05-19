@@ -42,23 +42,14 @@ fun ContactCard(
                 .padding(start = dimensionResource(R.dimen.large_padding))
                 .fillMaxSize()
         ) {
-            if(contact.avatarUri == null) {
-                Image(
-                    painter = painterResource(R.drawable.no_avatar_image),
-                    contentDescription = stringResource(R.string.no_avatar_description),
-                    modifier = Modifier
-                        .size(dimensionResource(R.dimen.contact_avatar_size))
-                        .clip(MaterialTheme.shapes.medium)
-                )
-            } else {
-                AsyncImage(
-                    model = contact.avatarUri,
-                    contentDescription = stringResource(R.string.contact_avatar_description) + " " + contact.fullName,
-                    modifier = Modifier
-                        .size(dimensionResource(R.dimen.contact_avatar_size))
-                        .clip(MaterialTheme.shapes.medium)
-                )
-            }
+            AsyncImage(
+                model = contact.avatarUri,
+                error = painterResource(R.drawable.no_avatar_image),
+                contentDescription = stringResource(R.string.contact_avatar_description) + " " + contact.fullName,
+                modifier = Modifier
+                    .size(dimensionResource(R.dimen.contact_avatar_size))
+                    .clip(MaterialTheme.shapes.medium)
+            )
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.Start,
