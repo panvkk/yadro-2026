@@ -9,6 +9,11 @@ import javax.inject.Inject
 class ContactsRepositoryImpl @Inject constructor(
     private val contactsDataSource: ContactsDataSource
 ) : ContactsRepository {
-    override suspend fun getContacts(): List<Contact> =
-        contactsDataSource.getContacts().map { it.toDomain() }
+    override suspend fun getContacts(): Result<List<Contact>> =
+        try {
+            val contacts = contactsDataSource.getContacts().map { it.toDomain() }
+            Result.success(contacts)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
 }

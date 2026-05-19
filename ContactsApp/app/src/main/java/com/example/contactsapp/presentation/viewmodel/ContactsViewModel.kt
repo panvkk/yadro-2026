@@ -1,5 +1,6 @@
 package com.example.contactsapp.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.contactsapp.domain.usecase.GetContactsUseCase
@@ -30,9 +31,15 @@ class ContactsViewModel @Inject constructor(
 
     fun loadContacts() {
         viewModelScope.launch {
-            val contacts = getContactsUseCase.invoke().map { it.toUiModel() }
-            val itemTypes = getItemTypes(contacts)
-            _uiState.update { ContactsUiState.Content(itemTypes) }
+            getContactsUseCase.invoke()
+                .onSuccess { contacts ->
+                    val itemTypes = getItemTypes(contacts.map { it.toUiModel() })
+                    _uiState.update { ContactsUiState.Content(itemTypes) }
+                }
+                .onFailure {
+                    _uiState.update { ContactsUiState.Error }
+                    Log.e(TAG, it.message ?: "Unknown error.")
+                }
         }
     }
 
@@ -68,5 +75,9 @@ class ContactsViewModel @Inject constructor(
     }
     fun closeCallsAlertDialog() {
         _alertDialogsState.update { it.copy(showCallsAlertDialog = false) }
+    }
+
+    companion object {
+        const val TAG = "ContactsViewModel"
     }
 }

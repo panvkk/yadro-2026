@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,7 +67,22 @@ fun ContactsScreen(
             is ContactsUiState.PermissionDenied -> {
                 item { NoPermissionToContactsPlaceholder() }
             }
-            else -> {  }
+            is ContactsUiState.Error -> {
+                item {
+                    Text(
+                        text = stringResource(R.string.error_loading_contacts),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+            is ContactsUiState.Loading -> {
+                item {
+                    Text(
+                        text = stringResource(R.string.contacts_loading),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
         }
     }
     if(alertDialogsState.showContactsAlertDialog) {
